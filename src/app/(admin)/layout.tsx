@@ -6,7 +6,7 @@ import type { UserRole } from "@/lib/constants";
 
 const STAFF_ROLES: UserRole[] = ["staff", "admin", "board"];
 
-export default async function DashboardLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -26,8 +26,12 @@ export default async function DashboardLayout({
     .eq("id", user.id)
     .single();
 
+  if (!profile || !STAFF_ROLES.includes(profile.role as UserRole)) {
+    redirect("/");
+  }
+
   let tenantName: string | undefined;
-  if (profile?.tenant_id) {
+  if (profile.tenant_id) {
     const { data: tenant } = await supabase
       .from("tenants")
       .select("short_name, name")
@@ -36,18 +40,15 @@ export default async function DashboardLayout({
     tenantName = tenant?.short_name || tenant?.name;
   }
 
-  const userName = profile
-    ? `${profile.first_name} ${profile.last_name}`
-    : user.email;
+  const userName = `${profile.first_name} ${profile.last_name}`;
 
   return (
     <div className="flex h-screen">
-      <Sidebar
-        tenantName={tenantName}
-        userName={userName}
-        isAdmin={STAFF_ROLES.includes(profile?.role as UserRole)}
-      />
+      <Sidebar tenantName={tenantName} userName={userName} isAdmin />
       <main className="flex-1 overflow-y-auto bg-gray-50 p-4 pb-20 md:p-6 md:pb-6">
+        <div className="mb-4 rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-xs font-medium text-amber-800">
+          Staff Dashboard
+        </div>
         {children}
       </main>
       <MobileNav />

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
-const navItems = [
+const memberNavItems = [
   { href: "/", label: "Dashboard", icon: "□" },
   { href: "/horses", label: "My Horses", icon: "◇" },
   { href: "/applications", label: "Applications", icon: "◈" },
@@ -13,12 +13,18 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: "⚙" },
 ];
 
+const adminNavItems = [
+  { href: "/admin/applications", label: "Application Queue", icon: "▦" },
+  { href: "/admin/members", label: "Members", icon: "◎" },
+];
+
 interface SidebarProps {
   tenantName?: string;
   userName?: string;
+  isAdmin?: boolean;
 }
 
-export function Sidebar({ tenantName, userName }: SidebarProps) {
+export function Sidebar({ tenantName, userName, isAdmin }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -37,7 +43,7 @@ export function Sidebar({ tenantName, userName }: SidebarProps) {
       </div>
 
       <nav className="flex-1 space-y-1 p-3" aria-label="Main navigation">
-        {navItems.map((item) => {
+        {memberNavItems.map((item) => {
           const active = pathname === item.href;
           return (
             <Link
@@ -57,6 +63,31 @@ export function Sidebar({ tenantName, userName }: SidebarProps) {
             </Link>
           );
         })}
+        {isAdmin && (
+          <>
+            <div className="my-2 border-t border-gray-200" />
+            {adminNavItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors min-h-[44px] ${
+                    active
+                      ? "bg-amber-100 text-amber-900"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  <span className="text-base" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       <div className="border-t border-gray-200 p-4">
