@@ -15,6 +15,7 @@ const memberNavItems = [
 ];
 
 const adminNavItems = [
+  { href: "/admin", label: "Admin Dashboard", icon: "▣" },
   { href: "/admin/applications", label: "Application Queue", icon: "▦" },
   { href: "/admin/members", label: "Members", icon: "◎" },
 ];
