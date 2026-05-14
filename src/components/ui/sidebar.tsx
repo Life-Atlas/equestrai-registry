@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 const memberNavItems = [
   { href: "/", label: "Dashboard", icon: "□" },
   { href: "/horses", label: "My Horses", icon: "◇" },
+  { href: "/horses/search", label: "Search Studbook", icon: "⌕" },
   { href: "/applications", label: "Applications", icon: "◈" },
   { href: "/documents", label: "Documents", icon: "▤" },
   { href: "/settings", label: "Settings", icon: "⚙" },
